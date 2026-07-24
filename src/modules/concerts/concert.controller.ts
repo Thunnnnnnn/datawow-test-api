@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Param, Post, Put, Body } from '@nestjs/common';
 import { ConcertService } from './concert.service';
-import { CreateConcertDto, ConcertResponseDto } from './dto/concert.dto';
+import { CreateConcertDto, ConcertResponseDto, UpdateConcertDto } from './dto/concert.dto';
 
 @Controller('/concerts')
 export class ConcertController {
@@ -22,7 +22,7 @@ export class ConcertController {
     }
 
     @Put('/:id')
-    updateConcert(@Param('id') id: number, @Body() data: Partial<CreateConcertDto>): Promise<ConcertResponseDto | null> {
+    updateConcert(@Param('id') id: number, @Body() data: Partial<UpdateConcertDto>): Promise<ConcertResponseDto | null> {
         return this.concertService.updateConcert(+id, data);
     }
 
