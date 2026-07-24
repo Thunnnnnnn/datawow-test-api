@@ -1,8 +1,8 @@
 export class ApiResponseDto<T> {
+    code: number;
     status: boolean;
     message?: string;
     data: T;
-    code: number;
 
     constructor(data: T, code: number,) {
         this.status = true;
