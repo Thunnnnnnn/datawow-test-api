@@ -5,6 +5,8 @@ export class UserResponseDto {
     email!: string;
     name!: string;
     role!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
 export class CreateUserDto {
