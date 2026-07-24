@@ -166,6 +166,30 @@ export class BookHistoriesService {
             return null;
         }
 
+        if (data.userId) {
+            if (data.userId !== bookHistory.userId) {
+                await this.prisma.log.create({
+                    data: {
+                        action: 'CHANGE USER',
+                        userId: data.userId,
+                        concertId: bookHistory.concertId,
+                    },
+                });
+            }
+        }
+
+        if (data.concertId) {
+            if (data.concertId !== bookHistory.concertId) {
+                await this.prisma.log.create({
+                    data: {
+                        action: 'CHANGE CONCERT',
+                        userId: bookHistory.userId,
+                        concertId: data.concertId,
+                    },
+                });
+            }
+        }
+
         const updatedBookHistory = await this.prisma.bookHistory.update({
             where: { id },
             data,
@@ -208,11 +232,11 @@ export class BookHistoriesService {
         if (!bookHistory) {
             return null;
         }
-        
+
         await this.prisma.bookHistory.delete({
             where: { id },
         });
-        
+
         await this.prisma.log.create({
             data: {
                 action: 'CANCEL',
@@ -220,7 +244,7 @@ export class BookHistoriesService {
                 concertId: bookHistory.concertId || 0,
             },
         });
-        
+
         return { message: 'Book history deleted successfully' };
     }
 }
