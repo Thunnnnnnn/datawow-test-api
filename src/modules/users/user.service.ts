@@ -84,7 +84,7 @@ export class UserService {
         };
     }
 
-    async deleteUser(id: number): Promise<UserResponseDto | null> {
+    async deleteUser(id: number): Promise<{ message: string } | null> {
         const user = await this.prisma.user.delete({
             where: { id },
         });
@@ -94,10 +94,7 @@ export class UserService {
         }
 
         return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
+            message: 'User deleted successfully',
         };
     }
 }

@@ -27,7 +27,7 @@ export class UserController {
     }
 
     @Delete('/:id')
-    deleteUser(@Param('id') id: number): Promise<UserResponseDto | null> {
+    deleteUser(@Param('id') id: number): Promise<{ message: string } | null> {
         return this.userService.deleteUser(+id);
     }
 }
