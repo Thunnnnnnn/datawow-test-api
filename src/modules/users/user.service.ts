@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { UserResponseDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
     constructor(private readonly prisma: PrismaService) { }
@@ -46,6 +48,8 @@ export class UserService {
             throw new BadRequestException('User with this email already exists');
         }
 
+        data.password = await bcrypt.hash(data.password, 10);
+
         const user = await this.prisma.user.create({
             data,
         });
@@ -75,6 +79,10 @@ export class UserService {
 
         if (existingUser && existingUser.id !== id) {
             throw new BadRequestException('User with this email already exists');
+        }
+
+        if(data.password) {
+            data.password = await bcrypt.hash(data.password, 10);
         }
 
         const updatedUser = await this.prisma.user.update({
