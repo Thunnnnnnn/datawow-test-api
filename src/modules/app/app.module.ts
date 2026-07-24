@@ -5,13 +5,15 @@ import { PrismaModule } from '../../database/prisma.module';
 import { UserModule } from '../users/user.module';
 import { ConcertModule } from '../concerts/concert.module';
 import { BookHistoriesModule } from '../book-histories/book-histories.module';
+import { LogModule } from '../log/log.module';
 
 @Module({
   imports: [
     PrismaModule,
     UserModule,
     ConcertModule,
-    BookHistoriesModule
+    BookHistoriesModule,
+    LogModule
   ],
   controllers: [AppController],
   providers: [AppService],
