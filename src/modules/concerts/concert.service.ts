@@ -1,0 +1,97 @@
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/database/prisma.service";
+import { ConcertResponseDto, CreateConcertDto, UpdateConcertDto } from "./dto/concert.dto";
+
+@Injectable()
+export class ConcertService {
+    constructor(private readonly prisma: PrismaService) { }
+
+    async getConcerts(): Promise<ConcertResponseDto[]> {
+        const concerts = await this.prisma.concert.findMany();
+
+        return concerts.map((concert) => ({
+            id: concert.id,
+            name: concert.name,
+            detail: concert.detail,
+            limit: concert.limit,
+            createdAt: concert.createdAt,
+            updatedAt: concert.updatedAt,
+        }));
+    }
+
+    async getConcertById(id: number): Promise<ConcertResponseDto | null> {
+        const concert = await this.prisma.concert.findUnique({
+            where: { id },
+        });
+
+        if (!concert) {
+            return null;
+        }
+
+        return {
+            id: concert.id,
+            name: concert.name,
+            detail: concert.detail,
+            limit: concert.limit,
+            createdAt: concert.createdAt,
+            updatedAt: concert.updatedAt,
+        };
+    }
+
+    async createConcert(data: CreateConcertDto): Promise<ConcertResponseDto> {
+        const concert = await this.prisma.concert.create({
+            data,
+        });
+
+        return {
+            id: concert.id,
+            name: concert.name,
+            detail: concert.detail,
+            limit: concert.limit,
+            createdAt: concert.createdAt,
+            updatedAt: concert.updatedAt,
+        };
+    }
+
+    async updateConcert(id: number, data: UpdateConcertDto): Promise<ConcertResponseDto | null> {
+        const concert = await this.prisma.concert.findUnique({
+            where: { id },
+        });
+
+        if (!concert) {
+            return null;
+        }
+
+        const updatedConcert = await this.prisma.concert.update({
+            where: { id },
+            data,
+        });
+
+        return {
+            id: updatedConcert.id,
+            name: updatedConcert.name,
+            detail: updatedConcert.detail,
+            limit: updatedConcert.limit,
+            createdAt: updatedConcert.createdAt,
+            updatedAt: updatedConcert.updatedAt,
+        };
+    }
+
+    async deleteConcert(id: number): Promise<{ message: string } | null> {
+        const concert = await this.prisma.concert.findUnique({
+            where: { id },
+        });
+
+        if (!concert) {
+            return null;
+        }
+
+        await this.prisma.concert.delete({
+            where: { id },
+        });
+
+        return {
+            message: 'Concert deleted successfully',
+        };
+    }
+}
