@@ -23,11 +23,11 @@ export class UserController {
 
     @Put('/:id')
     updateUser(@Param('id') id: number, @Body() data: Partial<CreateUserDto>): Promise<UserResponseDto | null> {
-        return this.userService.updateUser(id, data);
+        return this.userService.updateUser(+id, data);
     }
 
     @Delete('/:id')
     deleteUser(@Param('id') id: number): Promise<UserResponseDto | null> {
-        return this.userService.deleteUser(id);
+        return this.userService.deleteUser(+id);
     }
 }
