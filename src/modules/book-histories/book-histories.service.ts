@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/database/prisma.service";
+import { PrismaService } from "../../database/prisma.service";
 import { BookHistoryResponseDto, CreateBookHistoryDto, UpdateBookHistoryDto } from "./dto/book-histories.dto";
 
 @Injectable()
@@ -49,7 +49,7 @@ export class BookHistoriesService {
         });
 
         if (!bookHistory) {
-            return null;
+            throw new BadRequestException('Book history not found');
         }
 
         return {
@@ -195,10 +195,29 @@ export class BookHistoriesService {
         });
 
         if (!bookHistory) {
-            return null;
+            throw new BadRequestException('Book history not found');
+        }
+
+        const existingBookHistory = await this.prisma.bookHistory.findFirst({
+            where: {
+                userId: data.userId,
+                concertId: data.concertId,
+            },
+        });
+
+        if (existingBookHistory && existingBookHistory.id !== id) {
+            throw new BadRequestException('User has already booked this concert');
         }
 
         if (data.userId) {
+            const existingUser = await this.prisma.user.findUnique({
+                where: { id: data.userId },
+            });
+
+            if (!existingUser) {
+                throw new BadRequestException('User not found');
+            }
+
             if (data.userId !== bookHistory.userId) {
                 await this.prisma.log.create({
                     data: {
@@ -211,6 +230,14 @@ export class BookHistoriesService {
         }
 
         if (data.concertId) {
+            const existingConcert = await this.prisma.concert.findUnique({
+                where: { id: data.concertId },
+            });
+
+            if (!existingConcert) {
+                throw new BadRequestException('Concert not found');
+            }
+
             if (data.concertId !== bookHistory.concertId) {
                 await this.prisma.log.create({
                     data: {
@@ -262,7 +289,7 @@ export class BookHistoriesService {
         });
 
         if (!bookHistory) {
-            return null;
+            throw new BadRequestException('Book history not found');
         }
 
         await this.prisma.bookHistory.delete({

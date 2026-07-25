@@ -20,6 +20,12 @@ export class BookHistoriesController {
     }
 
     @UseGuards(AuthGuard)
+    @Get('/user/:userId')
+    getBookHistoriesByUserId(@Param('userId') userId: number): Promise<BookHistoryResponseDto[]> {
+        return this.bookHistoriesService.getBookHistoriesByUserId(+userId);
+    }
+
+    @UseGuards(AuthGuard)
     @Post()
     createBookHistory(@Body() data: CreateBookHistoryDto): Promise<BookHistoryResponseDto> {
         return this.bookHistoriesService.createBookHistory(data);
