@@ -123,6 +123,18 @@ export class BookHistoriesService {
             throw new BadRequestException('User has already booked this concert');
         }
 
+        const existingConcert = await this.prisma.concert.findUnique({
+            where: { id: data.concertId },
+        });
+
+        if (!existingConcert) {
+            throw new BadRequestException('Concert not found');
+        }
+
+        if (existingConcert.limit <= 0) {
+            throw new BadRequestException('Concert is fully booked');
+        }
+
         const bookHistory = await this.prisma.bookHistory.create({
             data,
             include: {
