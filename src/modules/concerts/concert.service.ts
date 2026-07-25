@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/database/prisma.service";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { PrismaService } from "../../database/prisma.service";
 import { ConcertResponseDto, CreateConcertDto, UpdateConcertDto } from "./dto/concert.dto";
 
 @Injectable()
@@ -59,7 +59,7 @@ export class ConcertService {
         });
 
         if (!concert) {
-            return null;
+            throw new BadRequestException('Concert not found');
         }
 
         const updatedConcert = await this.prisma.concert.update({
@@ -83,7 +83,7 @@ export class ConcertService {
         });
 
         if (!concert) {
-            return null;
+            throw new BadRequestException('Concert not found');
         }
 
         await this.prisma.concert.delete({
