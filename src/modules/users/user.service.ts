@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { UserResponseDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -81,7 +81,7 @@ export class UserService {
             throw new BadRequestException('User with this email already exists');
         }
 
-        if(data.password) {
+        if (data.password) {
             data.password = await bcrypt.hash(data.password, 10);
         }
 
@@ -101,13 +101,16 @@ export class UserService {
     }
 
     async deleteUser(id: number): Promise<{ message: string } | null> {
-        const user = await this.prisma.user.delete({
+        const user = await this.prisma.user.findUnique({
             where: { id },
         });
 
         if (!user) {
             throw new BadRequestException('User not found');
         }
+        await this.prisma.user.delete({
+            where: { id },
+        });
 
         return {
             message: 'User deleted successfully',
