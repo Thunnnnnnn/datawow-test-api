@@ -13,6 +13,7 @@ export class UserController {
         return this.userService.getUsers();
     }
 
+    @UseGuards(AuthGuard)
     @Get('/:id')
     getUserById(@Param('id') id: number): Promise<UserResponseDto | null> {
         return this.userService.getUserById(+id);
@@ -23,11 +24,13 @@ export class UserController {
         return this.userService.createUser(data);
     }
 
+    @UseGuards(AuthGuard)
     @Put('/:id')
     updateUser(@Param('id') id: number, @Body() data: Partial<UpdateUserDto>): Promise<UserResponseDto | null> {
         return this.userService.updateUser(+id, data);
     }
 
+    @UseGuards(AuthGuard)
     @Delete('/:id')
     deleteUser(@Param('id') id: number): Promise<{ message: string } | null> {
         return this.userService.deleteUser(+id);
