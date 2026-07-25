@@ -15,7 +15,7 @@ import { AuthModule } from '../auth/auth.module';
     UserModule,
     ConcertModule,
     BookHistoriesModule,
-    LogModule,
+    LogModule
   ],
   controllers: [AppController],
   providers: [AppService],

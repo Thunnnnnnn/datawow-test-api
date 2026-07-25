@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { BookHistoryResponseDto, CreateBookHistoryDto, UpdateBookHistoryDto } from "./dto/book-histories.dto";
 
@@ -112,11 +112,31 @@ export class BookHistoriesService {
     }
 
     async createBookHistory(data: CreateBookHistoryDto): Promise<BookHistoryResponseDto> {
+        const existingBookHistory = await this.prisma.bookHistory.findFirst({
+            where: {
+                userId: data.userId,
+                concertId: data.concertId,
+            },
+        });
+
+        if (existingBookHistory) {
+            throw new BadRequestException('User has already booked this concert');
+        }
+
         const bookHistory = await this.prisma.bookHistory.create({
             data,
             include: {
                 user: true,
                 concert: true,
+            },
+        });
+
+        await this.prisma.concert.update({
+            where: { id: data.concertId },
+            data: {
+                limit: {
+                    decrement: 1,
+                },
             },
         });
 
@@ -235,6 +255,15 @@ export class BookHistoriesService {
 
         await this.prisma.bookHistory.delete({
             where: { id },
+        });
+
+        await this.prisma.concert.update({
+            where: { id: bookHistory.concertId },
+            data: {
+                limit: {
+                    increment: 1,
+                },
+            },
         });
 
         await this.prisma.log.create({
