@@ -36,6 +36,7 @@ model BookHistory {
   concert   Concert  @relation(fields: [concertId], references: [id])
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("RESERVE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

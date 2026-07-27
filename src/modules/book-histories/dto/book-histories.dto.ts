@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { ConcertResponseDto } from "src/modules/concerts/dto/concert.dto";
 import { UserResponseDto } from "src/modules/users/dto/user.dto";
 
@@ -28,4 +28,7 @@ export class UpdateBookHistoryDto {
 
     @IsNumber()
     concertId?: number;
+
+    @IsString()
+    status?: string;
 }
