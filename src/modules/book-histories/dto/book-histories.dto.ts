@@ -8,6 +8,7 @@ export class BookHistoryResponseDto {
     user!: UserResponseDto;
     concertId!: number;
     concert!: ConcertResponseDto;
+    status!: string;
     createdAt!: Date;
     updatedAt!: Date;
 }

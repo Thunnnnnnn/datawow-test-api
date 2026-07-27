@@ -20,6 +20,7 @@ export class BookHistoriesService {
             concertId: bookHistory.concertId,
             createdAt: bookHistory.createdAt,
             updatedAt: bookHistory.updatedAt,
+            status: bookHistory.status,
             user: {
                 id: bookHistory.user.id,
                 email: bookHistory.user.email,
@@ -56,6 +57,7 @@ export class BookHistoriesService {
             id: bookHistory.id,
             userId: bookHistory.userId,
             concertId: bookHistory.concertId,
+            status: bookHistory.status,
             createdAt: bookHistory.createdAt,
             updatedAt: bookHistory.updatedAt,
             user: {
@@ -90,6 +92,7 @@ export class BookHistoriesService {
             id: bookHistory.id,
             userId: bookHistory.userId,
             concertId: bookHistory.concertId,
+            status: bookHistory.status,
             createdAt: bookHistory.createdAt,
             updatedAt: bookHistory.updatedAt,
             user: {
@@ -166,6 +169,7 @@ export class BookHistoriesService {
             concertId: bookHistory.concertId,
             createdAt: bookHistory.createdAt,
             updatedAt: bookHistory.updatedAt,
+            status: bookHistory.status,
             user: {
                 id: bookHistory.user.id,
                 email: bookHistory.user.email,
@@ -264,6 +268,7 @@ export class BookHistoriesService {
             concertId: updatedBookHistory.concertId,
             createdAt: updatedBookHistory.createdAt,
             updatedAt: updatedBookHistory.updatedAt,
+            status: updatedBookHistory.status,
             user: {
                 id: updatedBookHistory.user.id,
                 email: updatedBookHistory.user.email,
