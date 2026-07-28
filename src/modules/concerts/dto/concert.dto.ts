@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, Min } from 'class-validator';
 
 export class ConcertResponseDto {
     id!: number;
@@ -26,6 +26,7 @@ export class CreateConcertDto {
     detail!: string;
 
     @IsNumber()
+    @Min(1)
     @IsNotEmpty()
     limit!: number;
 }
