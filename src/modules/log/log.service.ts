@@ -13,6 +13,9 @@ export class LogService {
                 user: true,
                 concert: true,
             },
+            orderBy: {
+                id: 'desc'
+            }
         });
 
         return logs.map((log) => ({

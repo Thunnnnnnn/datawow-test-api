@@ -16,10 +16,6 @@ export class BookHistoryResponseDto {
 export class CreateBookHistoryDto {
     @IsNumber()
     @IsNotEmpty()
-    userId!: number;
-
-    @IsNumber()
-    @IsNotEmpty()
     concertId!: number;
 }
 

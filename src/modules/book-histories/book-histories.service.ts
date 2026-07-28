@@ -14,6 +14,9 @@ export class BookHistoriesService {
                 user: true,
                 concert: true,
             },
+            orderBy: {
+                id: 'asc'
+            }
         });
 
         return bookHistories.map((bookHistory) => ({
@@ -90,6 +93,9 @@ export class BookHistoriesService {
                 user: true,
                 concert: true,
             },
+            orderBy: {
+                id: 'asc'
+            }
         });
 
         return bookHistories.map((bookHistory) => ({
@@ -119,7 +125,7 @@ export class BookHistoriesService {
         }));
     }
 
-    async createBookHistory(data: CreateBookHistoryDto): Promise<BookHistoryResponseDto> {
+    async createBookHistory(data: { userId: number; concertId: number }): Promise<BookHistoryResponseDto> {
         const existingBookHistory = await this.prisma.bookHistory.findFirst({
             where: {
                 userId: data.userId,

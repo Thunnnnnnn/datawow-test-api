@@ -7,7 +7,11 @@ export class ConcertService {
     constructor(private readonly prisma: PrismaService) { }
 
     async getConcerts(): Promise<ConcertResponseDto[]> {
-        const concerts = await this.prisma.concert.findMany();
+        const concerts = await this.prisma.concert.findMany({
+            orderBy: {
+                id: 'asc'
+            }
+        });
 
         return concerts.map((concert) => ({
             id: concert.id,

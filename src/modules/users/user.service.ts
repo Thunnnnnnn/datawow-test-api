@@ -8,7 +8,11 @@ export class UserService {
     constructor(private readonly prisma: PrismaService) { }
 
     async getUsers(): Promise<UserResponseDto[]> {
-        const user = await this.prisma.user.findMany();
+        const user = await this.prisma.user.findMany({
+            orderBy: {
+                id: 'asc'
+            }
+        });
 
         return user.map((user) => ({
             id: user.id,
