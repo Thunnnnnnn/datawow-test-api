@@ -20,6 +20,11 @@ export class CreateUserDto {
     password!: string;
 
     @IsString()
+    @MinLength(6)
+    @IsNotEmpty()
+    confirmPassword!: string;
+
+    @IsString()
     @IsNotEmpty()
     name!: string;
 

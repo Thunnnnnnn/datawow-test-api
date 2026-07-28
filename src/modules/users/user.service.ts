@@ -52,6 +52,10 @@ export class UserService {
             throw new BadRequestException('User with this email already exists');
         }
 
+        if(data.password !== data.confirmPassword) {
+            throw new BadRequestException('Password and confirm password do not match');
+        }
+
         data.password = await bcrypt.hash(data.password, 10);
 
         const user = await this.prisma.user.create({
