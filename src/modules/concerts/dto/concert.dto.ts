@@ -10,6 +10,12 @@ export class ConcertResponseDto {
     updatedAt!: Date;
 }
 
+export class ConcertCountResponseDto {
+    count!: number;
+    bookedCount!: number;
+    cancelCount!: number;
+}
+
 export class CreateConcertDto {
     @IsString()
     @IsNotEmpty()

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
-import { ConcertResponseDto, CreateConcertDto, UpdateConcertDto } from "./dto/concert.dto";
+import { ConcertCountResponseDto, ConcertResponseDto, CreateConcertDto, UpdateConcertDto } from "./dto/concert.dto";
 
 @Injectable()
 export class ConcertService {
@@ -42,6 +42,23 @@ export class ConcertService {
             createdAt: concert.createdAt,
             updatedAt: concert.updatedAt,
         };
+    }
+
+    async getAllConcertCount(): Promise<ConcertCountResponseDto> {
+        const concert = await this.prisma.concert.findMany();
+        const count = concert.reduce((acc, data) => acc + data.limit, 0);
+        const bookedCount = concert.reduce((acc, data) => acc + data.bookedCount, 0);
+        const cancelCount = await this.prisma.bookHistory.count({
+            where: {
+                status: 'CANCEL'
+            },
+            orderBy: {
+                id: 'asc'
+            }
+        })
+
+        return { count, bookedCount, cancelCount: cancelCount };
+
     }
 
     async createConcert(data: CreateConcertDto): Promise<ConcertResponseDto> {

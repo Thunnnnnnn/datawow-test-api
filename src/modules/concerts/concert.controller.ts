@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Param, Post, Put, Body, UseGuards } from '@nestjs/common';
 import { ConcertService } from './concert.service';
-import { CreateConcertDto, ConcertResponseDto, UpdateConcertDto } from './dto/concert.dto';
+import { CreateConcertDto, ConcertResponseDto, UpdateConcertDto, ConcertCountResponseDto } from './dto/concert.dto';
 import { Role } from 'src/common/constants/role.enum';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { AuthGuard } from '../auth/auth.guard';
@@ -14,6 +14,12 @@ export class ConcertController {
     @Get()
     getConcerts(): Promise<ConcertResponseDto[]> {
         return this.concertService.getConcerts();
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('/count')
+    getAllConcertCount(): Promise<ConcertCountResponseDto> {
+        return this.concertService.getAllConcertCount();
     }
 
     @UseGuards(AuthGuard)

@@ -133,7 +133,7 @@ export class BookHistoriesService {
             },
         });
 
-        if (existingBookHistory) {
+        if (existingBookHistory?.status === 'BOOKED') {
             throw new BadRequestException('User has already booked this concert');
         }
 
@@ -214,57 +214,6 @@ export class BookHistoriesService {
             throw new BadRequestException('Book history not found');
         }
 
-        const existingBookHistory = await this.prisma.bookHistory.findFirst({
-            where: {
-                userId: data.userId,
-                concertId: data.concertId,
-            },
-        });
-
-        if (existingBookHistory && existingBookHistory.id !== id) {
-            throw new BadRequestException('User has already booked this concert');
-        }
-
-        if (data.userId) {
-            const existingUser = await this.prisma.user.findUnique({
-                where: { id: data.userId },
-            });
-
-            if (!existingUser) {
-                throw new BadRequestException('User not found');
-            }
-
-            if (data.userId !== bookHistory.userId) {
-                await this.prisma.log.create({
-                    data: {
-                        action: 'CHANGE USER',
-                        userId: data.userId,
-                        concertId: bookHistory.concertId,
-                    },
-                });
-            }
-        }
-
-        if (data.concertId) {
-            const existingConcert = await this.prisma.concert.findUnique({
-                where: { id: data.concertId },
-            });
-
-            if (!existingConcert) {
-                throw new BadRequestException('Concert not found');
-            }
-
-            if (data.concertId !== bookHistory.concertId) {
-                await this.prisma.log.create({
-                    data: {
-                        action: 'CHANGE CONCERT',
-                        userId: bookHistory.userId,
-                        concertId: data.concertId,
-                    },
-                });
-            }
-        }
-
         const updatedBookHistory = await this.prisma.bookHistory.update({
             where: { id },
             data,
@@ -273,6 +222,23 @@ export class BookHistoriesService {
                 concert: true,
             },
         });
+
+        if (updatedBookHistory) {
+            await this.prisma.log.create({
+                data: {
+                    action: updatedBookHistory.status,
+                    userId: updatedBookHistory.userId || 0,
+                    concertId: updatedBookHistory.concertId || 0,
+                },
+            });
+
+            await this.prisma.concert.update({
+                where: { id: updatedBookHistory.concertId },
+                data: {
+                    bookedCount: updatedBookHistory.status === 'BOOKED' ? { increment: 1 } : { decrement: 1 },
+                },
+            });
+        }
 
         return {
             id: updatedBookHistory.id,
