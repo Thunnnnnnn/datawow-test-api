@@ -4,7 +4,9 @@ import { BookHistoryResponseDto, CreateBookHistoryDto, UpdateBookHistoryDto } fr
 
 @Injectable()
 export class BookHistoriesService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+    ) { }
 
     async getBookHistories(): Promise<BookHistoryResponseDto[]> {
         const bookHistories = await this.prisma.bookHistory.findMany({
@@ -34,6 +36,7 @@ export class BookHistoriesService {
                 name: bookHistory.concert.name,
                 detail: bookHistory.concert.detail,
                 limit: bookHistory.concert.limit,
+                bookedCount: bookHistory.concert.bookedCount,
                 createdAt: bookHistory.concert.createdAt,
                 updatedAt: bookHistory.concert.updatedAt,
             },
@@ -73,15 +76,16 @@ export class BookHistoriesService {
                 name: bookHistory.concert.name,
                 detail: bookHistory.concert.detail,
                 limit: bookHistory.concert.limit,
+                bookedCount: bookHistory.concert.bookedCount,
                 createdAt: bookHistory.concert.createdAt,
                 updatedAt: bookHistory.concert.updatedAt,
             },
         };
     }
 
-    async getBookHistoriesByUserId(userId: number): Promise<BookHistoryResponseDto[]> {
+    async getBookHistoriesByUser(userId: number): Promise<BookHistoryResponseDto[]> {
         const bookHistories = await this.prisma.bookHistory.findMany({
-            where: { userId },
+            where: { userId: userId },
             include: {
                 user: true,
                 concert: true,
@@ -107,6 +111,7 @@ export class BookHistoriesService {
                 id: bookHistory.concert.id,
                 name: bookHistory.concert.name,
                 detail: bookHistory.concert.detail,
+                bookedCount: bookHistory.concert.bookedCount,
                 limit: bookHistory.concert.limit,
                 createdAt: bookHistory.concert.createdAt,
                 updatedAt: bookHistory.concert.updatedAt,
@@ -134,7 +139,7 @@ export class BookHistoriesService {
             throw new BadRequestException('Concert not found');
         }
 
-        if (existingConcert.limit <= 0) {
+        if (existingConcert.bookedCount >= existingConcert.limit) {
             throw new BadRequestException('Concert is fully booked');
         }
 
@@ -149,8 +154,8 @@ export class BookHistoriesService {
         await this.prisma.concert.update({
             where: { id: data.concertId },
             data: {
-                limit: {
-                    decrement: 1,
+                bookedCount: {
+                    increment: 1,
                 },
             },
         });
@@ -183,6 +188,7 @@ export class BookHistoriesService {
                 name: bookHistory.concert.name,
                 detail: bookHistory.concert.detail,
                 limit: bookHistory.concert.limit,
+                bookedCount: bookHistory.concert.bookedCount,
                 createdAt: bookHistory.concert.createdAt,
                 updatedAt: bookHistory.concert.updatedAt,
             },
@@ -281,6 +287,7 @@ export class BookHistoriesService {
                 id: updatedBookHistory.concert.id,
                 name: updatedBookHistory.concert.name,
                 detail: updatedBookHistory.concert.detail,
+                bookedCount: updatedBookHistory.concert.bookedCount,
                 limit: updatedBookHistory.concert.limit,
                 createdAt: updatedBookHistory.concert.createdAt,
                 updatedAt: updatedBookHistory.concert.updatedAt,
@@ -304,8 +311,8 @@ export class BookHistoriesService {
         await this.prisma.concert.update({
             where: { id: bookHistory.concertId },
             data: {
-                limit: {
-                    increment: 1,
+                bookedCount: {
+                    decrement: 1,
                 },
             },
         });

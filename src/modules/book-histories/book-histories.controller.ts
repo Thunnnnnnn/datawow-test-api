@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Put, Body, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, Body, UseGuards, Req } from '@nestjs/common';
 import { BookHistoriesService } from './book-histories.service';
 import { CreateBookHistoryDto, BookHistoryResponseDto, UpdateBookHistoryDto } from './dto/book-histories.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -14,15 +14,16 @@ export class BookHistoriesController {
     }
 
     @UseGuards(AuthGuard)
-    @Get('/:id')
-    getBookHistoryById(@Param('id') id: number): Promise<BookHistoryResponseDto | null> {
-        return this.bookHistoriesService.getBookHistoryById(+id);
+    @Get('/user')
+    getBookHistoriesByUserId(@Req() req: Request): Promise<BookHistoryResponseDto[]> {
+        const userId = req['user'].sub;
+        return this.bookHistoriesService.getBookHistoriesByUser(+userId);
     }
 
     @UseGuards(AuthGuard)
-    @Get('/user/:userId')
-    getBookHistoriesByUserId(@Param('userId') userId: number): Promise<BookHistoryResponseDto[]> {
-        return this.bookHistoriesService.getBookHistoriesByUserId(+userId);
+    @Get('/:id')
+    getBookHistoryById(@Param('id') id: number): Promise<BookHistoryResponseDto | null> {
+        return this.bookHistoriesService.getBookHistoryById(+id);
     }
 
     @UseGuards(AuthGuard)

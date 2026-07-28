@@ -33,6 +33,7 @@ export class LogService {
                 name: log.concert.name,
                 detail: log.concert.detail,
                 limit: log.concert.limit,
+                bookedCount: log.concert.bookedCount,
                 createdAt: log.concert.createdAt,
                 updatedAt: log.concert.updatedAt,
             },

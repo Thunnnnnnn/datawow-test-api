@@ -14,6 +14,7 @@ export class ConcertService {
             name: concert.name,
             detail: concert.detail,
             limit: concert.limit,
+            bookedCount: concert.bookedCount,
             createdAt: concert.createdAt,
             updatedAt: concert.updatedAt,
         }));
@@ -33,6 +34,7 @@ export class ConcertService {
             name: concert.name,
             detail: concert.detail,
             limit: concert.limit,
+            bookedCount: concert.bookedCount,
             createdAt: concert.createdAt,
             updatedAt: concert.updatedAt,
         };
@@ -48,6 +50,7 @@ export class ConcertService {
             name: concert.name,
             detail: concert.detail,
             limit: concert.limit,
+            bookedCount: concert.bookedCount,
             createdAt: concert.createdAt,
             updatedAt: concert.updatedAt,
         };
@@ -72,6 +75,7 @@ export class ConcertService {
             name: updatedConcert.name,
             detail: updatedConcert.detail,
             limit: updatedConcert.limit,
+            bookedCount: updatedConcert.bookedCount,
             createdAt: updatedConcert.createdAt,
             updatedAt: updatedConcert.updatedAt,
         };

@@ -5,6 +5,7 @@ export class ConcertResponseDto {
     name!: string;
     detail!: string;
     limit!: number;
+    bookedCount!: number;
     createdAt!: Date;
     updatedAt!: Date;
 }
