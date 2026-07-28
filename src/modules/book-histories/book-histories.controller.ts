@@ -28,9 +28,14 @@ export class BookHistoriesController {
 
     @UseGuards(AuthGuard)
     @Post()
-    createBookHistory(@Body() data: CreateBookHistoryDto): Promise<BookHistoryResponseDto> {
-        return this.bookHistoriesService.createBookHistory(data);
+    createBookHistory(@Req() req: Request, @Body() data: CreateBookHistoryDto): Promise<BookHistoryResponseDto> {
+        const userId = req['user'].sub;
+        return this.bookHistoriesService.createBookHistory({
+            userId: +userId,
+            concertId: data.concertId,
+        });
     }
+
 
     @UseGuards(AuthGuard)
     @Put('/:id')
