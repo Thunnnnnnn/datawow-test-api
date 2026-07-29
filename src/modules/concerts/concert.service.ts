@@ -111,6 +111,18 @@ export class ConcertService {
             throw new BadRequestException('Concert not found');
         }
 
+        await this.prisma.log.deleteMany({
+            where: {
+                concertId: id,
+            },
+        })
+
+        await this.prisma.bookHistory.deleteMany({
+            where: {
+                concertId: id,
+            },
+        })
+
         await this.prisma.concert.delete({
             where: { id },
         });
