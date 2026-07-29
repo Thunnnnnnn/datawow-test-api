@@ -13,6 +13,14 @@ describe('ConcertService', () => {
             update: jest.fn(),
             delete: jest.fn(),
         },
+        log: {
+            create: jest.fn(),
+            deleteMany: jest.fn(),
+        },
+        bookHistory: {
+            deleteMany: jest.fn(),
+            create: jest.fn(),
+        },
     };
 
     beforeEach(async () => {
@@ -144,8 +152,29 @@ describe('ConcertService', () => {
                 updatedAt: new Date(),
             };
 
+            const log = [{
+                id: 1,
+                action: "CANCEL",
+                concertId: 1,
+                userId: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }]
+
+            const bookHistory = [{
+                id: 1,
+                concertId: 1,
+                userId: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }];
+
+            prismaMock.log.create.mockResolvedValue(log);
+            prismaMock.bookHistory.create.mockResolvedValue(bookHistory);
             prismaMock.concert.findUnique.mockResolvedValue(concert);
             prismaMock.concert.delete.mockResolvedValue(concert);
+            prismaMock.log.deleteMany.mockResolvedValue({ count: 1 });
+            prismaMock.bookHistory.deleteMany.mockResolvedValue({ count: 1 });
 
             const result = await concertService.deleteConcert(1);
 

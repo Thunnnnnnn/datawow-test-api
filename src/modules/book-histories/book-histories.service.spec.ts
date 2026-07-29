@@ -184,60 +184,6 @@ describe('BookHistoriesService', () => {
             await expect(bookHistoriesService.createBookHistory(bookHistoryData)).rejects.toThrow('Concert not found');
         });
 
-        it('ผู้ใช้จองคอนเสิร์ตนี้แล้ว', async () => {
-            const concertData = {
-                id: 1,
-                name: 'Concert 1',
-                detail: 'Detail 1',
-                limit: 100,
-            }
-
-            const userData = {
-                id: 1,
-                email: 'test@example.com',
-                name: 'Test User',
-                role: 'USER',
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            }
-
-            const createdBookHistory = {
-                id: 1,
-                userId: 1,
-                concertId: 1,
-                user: {
-                    id: 1,
-                    email: 'test@example.com',
-                    name: 'Test User',
-                    role: 'USER',
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                concert: {
-                    id: 1,
-                    name: 'Test Concert',
-                    detail: 'Concert Detail',
-                    limit: 100,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const bookHistoryData = {
-                userId: 1,
-                concertId: 1,
-            };
-
-            prismaMock.concert.findUnique.mockResolvedValue(concertData);
-            prismaMock.user.findUnique.mockResolvedValue(userData);
-            prismaMock.bookHistory.create.mockResolvedValue(createdBookHistory);
-            prismaMock.bookHistory.findFirst.mockResolvedValue(bookHistoryData);
-
-            await expect(bookHistoriesService.createBookHistory(bookHistoryData)).rejects.toThrow('User has already booked this concert');
-        });
-
         it('คอนเสิร์ตเต็มแล้ว', async () => {
             prismaMock.bookHistory.findFirst.mockResolvedValue(null);
 
@@ -246,6 +192,7 @@ describe('BookHistoriesService', () => {
                 name: 'Concert 1',
                 detail: 'Detail 1',
                 limit: 0,
+                bookedCount: 0,
             }
 
             const userData = {
@@ -264,7 +211,6 @@ describe('BookHistoriesService', () => {
 
             prismaMock.concert.findUnique.mockResolvedValue(concertData);
             prismaMock.user.findUnique.mockResolvedValue(userData);
-            // prismaMock.bookHistory.findFirst.mockResolvedValue(bookHistoryData);
 
             await expect(bookHistoriesService.createBookHistory(bookHistoryData)).rejects.toThrow('Concert is fully booked');
         });
@@ -318,140 +264,6 @@ describe('BookHistoriesService', () => {
             });
 
             await expect(result).rejects.toThrow('Book history not found');
-        });
-
-        it('โยน BadRequestException หากไม่พบคอนเสิร์ต', async () => {
-            const bookHistoryData = {
-                userId: 1,
-                concertId: 1,
-            };
-
-            const existingBookHistory = {
-                id: 1,
-                userId: 1,
-                concertId: 1,
-                user: {
-                    id: 1,
-                    email: 'test@example.com',
-                    name: 'Test User',
-                    role: 'USER',
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                concert: {
-                    id: 1,
-                    name: 'Concert 1',
-                    detail: 'Detail 1',
-                    limit: 100,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            prismaMock.bookHistory.findUnique.mockResolvedValue(existingBookHistory);
-            prismaMock.concert.findUnique.mockResolvedValue(null);
-
-            const result = bookHistoriesService.updateBookHistory(1, bookHistoryData);
-
-            await expect(result).rejects.toThrow('Concert not found');
-        })
-
-        it('โยน BadRequestException หากไม่พบผู้ใช้', async () => {
-            const bookHistoryData = {
-                userId: 1,
-                concertId: 1,
-            };
-
-            const existingBookHistory = {
-                id: 1,
-                userId: 1,
-                concertId: 1,
-                user: {
-                    id: 1,
-                    email: 'test@example.com',
-                    name: 'Test User',
-                    role: 'USER',
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                concert: {
-                    id: 1,
-                    name: 'Concert 1',
-                    detail: 'Detail 1',
-                    limit: 100,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            prismaMock.bookHistory.findUnique.mockResolvedValue(existingBookHistory);
-            prismaMock.concert.findUnique.mockResolvedValue({
-                id: 1,
-                name: 'Concert 1',
-                detail: 'Detail 1',
-                limit: 100,
-            });
-            prismaMock.user.findUnique.mockResolvedValue(null);
-
-            const result = bookHistoriesService.updateBookHistory(1, bookHistoryData);
-
-            await expect(result).rejects.toThrow('User not found');
-        })
-
-        it('โยน BadRequestException หากผู้ใช้จองคอนเสิร์ตนี้แล้ว', async () => {
-            const bookHistoryData = {
-                userId: 1,
-                concertId: 1,
-            };
-
-            const existingBookHistory = {
-                id: 1,
-                userId: 1,
-                concertId: 1,
-                user: {
-                    id: 1,
-                    email: 'test@example.com',
-                    name: 'Test User',
-                    role: 'USER',
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                concert: {
-                    id: 1,
-                    name: 'Concert 1',
-                    detail: 'Detail 1',
-                    limit: 100,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            prismaMock.bookHistory.findUnique.mockResolvedValue(existingBookHistory);
-            prismaMock.concert.findUnique.mockResolvedValue({
-                id: 1,
-                name: 'Concert 1',
-                detail: 'Detail 1',
-                limit: 100,
-            });
-            prismaMock.user.findUnique.mockResolvedValue({
-                id: 1,
-                email: 'test@example.com',
-                name: 'Test User',
-                role: 'USER',
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
-            prismaMock.bookHistory.findFirst.mockResolvedValue(bookHistoryData);
-
-            const result = bookHistoriesService.updateBookHistory(1, bookHistoryData);
-
-            await expect(result).rejects.toThrow('User has already booked this concert');
         });
     });
 

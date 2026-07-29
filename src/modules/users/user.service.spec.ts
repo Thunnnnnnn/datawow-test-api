@@ -88,6 +88,7 @@ describe('UserService', () => {
                 name: 'John',
                 email: 'john@test.com',
                 password: 'password',
+                confirmPassword: 'password',
                 role: 'USER',
             });
 
