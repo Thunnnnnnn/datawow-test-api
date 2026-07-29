@@ -54,3 +54,7 @@ docker compose down
 #### - PrismaORM
 
 #### - PostqresSQL
+
+#### - Class Validator
+
+#### - bcrypt
