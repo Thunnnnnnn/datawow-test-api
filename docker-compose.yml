@@ -2,6 +2,15 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    container_name: datawow_test_api
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
   postgres:
     image: postgres:16-alpine
     container_name: datawow_postgres_db
