@@ -133,7 +133,7 @@ export class BookHistoriesService {
             },
         });
 
-        if (existingBookHistory?.status === 'BOOKED') {
+        if (existingBookHistory?.status === 'RESERVE') {
             throw new BadRequestException('User has already booked this concert');
         }
 
@@ -168,7 +168,7 @@ export class BookHistoriesService {
 
         await this.prisma.log.create({
             data: {
-                action: 'BOOKED',
+                action: 'RESERVE',
                 userId: data.userId,
                 concertId: data.concertId,
             },
@@ -235,7 +235,7 @@ export class BookHistoriesService {
             await this.prisma.concert.update({
                 where: { id: updatedBookHistory.concertId },
                 data: {
-                    bookedCount: updatedBookHistory.status === 'BOOKED' ? { increment: 1 } : { decrement: 1 },
+                    bookedCount: updatedBookHistory.status === 'RESERVE' ? { increment: 1 } : { decrement: 1 },
                 },
             });
         }
