@@ -47,14 +47,15 @@ export class ConcertService {
     async getAllConcertCount(): Promise<ConcertCountResponseDto> {
         const concert = await this.prisma.concert.findMany();
         const count = concert.reduce((acc, data) => acc + data.limit, 0);
-        const bookedCount = concert.reduce((acc, data) => acc + data.bookedCount, 0);
+        const bookedCount = await this.prisma.bookHistory.count({
+            where: {
+                status: 'RESERVE'
+            },
+        })
         const cancelCount = await this.prisma.bookHistory.count({
             where: {
                 status: 'CANCEL'
-            },
-            orderBy: {
-                id: 'asc'
-            }
+            },  
         })
 
         return { count, bookedCount, cancelCount: cancelCount };
